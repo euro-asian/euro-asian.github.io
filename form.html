@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>联系表单</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      background: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    form {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin: 0.5rem 0 0.2rem;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      width: 100%;
+    }
+    button:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <form id="contact-form">
+    <h2>联系表单</h2>
+
+    <label for="name">姓名</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="phone">手机</label>
+    <input type="tel" id="phone" name="phone">
+
+    <label for="other">其他联系方式</label>
+    <input type="text" id="other" name="other">
+
+    <label for="lang1">习惯第一语言</label>
+    <input type="text" id="lang1" name="lang1">
+
+    <label for="lang2">第二语言</label>
+    <input type="text" id="lang2" name="lang2">
+
+    <label for="desc">需要描述</label>
+    <textarea id="desc" name="desc" rows="4"></textarea>
+
+    <button type="submit">提交</button>
+  </form>
+
+  <script>
+    // 初始化 EmailJS
+    (function() {
+      emailjs.init("YOUR_PUBLIC_KEY"); // <-- 替换为你的 Public Key
+    })();
+
+    document.getElementById("contact-form").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      // 发送邮件
+      emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        other: document.getElementById("other").value,
+        lang1: document.getElementById("lang1").value,
+        lang2: document.getElementById("lang2").value,
+        desc: document.getElementById("desc").value
+      }).then(function(response) {
+        alert("提交成功！我们会尽快联系你。");
+        document.getElementById("contact-form").reset();
+      }, function(error) {
+        alert("发送失败，请稍后再试！");
+        console.error(error);
+      });
+    });
+  </script>
+</body>
+</html>
