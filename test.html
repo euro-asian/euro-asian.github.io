@@ -1,72 +1,66 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的个人网站</title>
-  <style>
-    body {
-      font-family: "Microsoft YaHei", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f9;
-      color: #333;
-    }
-    header {
-      background: #4CAF50;
-      color: white;
-      padding: 1.5rem;
-      text-align: center;
-    }
-    main {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    h1 {
-      margin-top: 0;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background: #eee;
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #555;
-    }
-    a {
-      color: #4CAF50;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>欢迎来到我的网站！</h1>
-    <p>这是我在 GitHub Pages 上搭建的第一个个人网站 🎉</p>
-  </header>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-  <main>
-    <h2>关于我</h2>
-    <p>你好，我是 Euro-Asian
-    <h2>联系方式</h2>
-    <ul>
-      <li>📧 邮箱：<a href="mailto:yourmail@example.com">yourmail@example.com</a></li>
-      <li>🐙 GitHub：<a href="https://github.com/你的用户名" target="_blank">https://github.com/你的用户名</a></li>
-    </ul>
+<video
+    id="video"
+    controls
+    autoplay
+    muted
+    playsinline
+    preload="auto"
+    width="100%"
+    height="100%"
+></video>
 
-    <h2>我的计划</h2>
-    <p>未来我会在这里发布文章、项目和一些学习记录。</p>
-  </main>
+<script>
+    const video = document.getElementById("video");
 
-  <footer>
-    <p>© 2025 我的个人网站 | Powered by GitHub Pages</p>
-  </footer>
-</body>
-</html>
+    const videoSrc =
+        "https://d2hqlhbe1d8j2s.cloudfront.net/testlas/segment/25b7b707e4f84e2cb0717c929c2820aa/hls/1765465272413/25b7b707e4f84e2cb0717c929c2820aa.m3u8";
+
+    // Prefer Hls.js for Chrome/Edge/Firefox and other MSE-capable browsers
+    if (Hls.isSupported()) {
+
+        const hls = new Hls({
+            enableWorker: true,
+            lowLatencyMode: true,
+        });
+
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+
+            const playPromise = video.play();
+
+            if (playPromise !== undefined) {
+                playPromise.catch(function (error) {
+                    console.warn("Autoplay prevented:", error);
+                });
+            }
+        });
+
+        hls.on(Hls.Events.ERROR, function (event, data) {
+            console.error("HLS.js error:", data);
+        });
+
+    }
+    // Safari / iOS native HLS fallback
+    else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+
+        video.src = videoSrc;
+
+        video.addEventListener("loadedmetadata", function () {
+
+            const playPromise = video.play();
+
+            if (playPromise !== undefined) {
+                playPromise.catch(function (error) {
+                    console.warn("Autoplay prevented:", error);
+                });
+            }
+        });
+    }
+    else {
+        console.error("HLS is not supported in this browser.");
+    }
+</script>
