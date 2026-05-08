@@ -1,9 +1,0 @@
-<video id="videoPlayer" controls width="100%" height="100%" ></video>
-<script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
-<script>
-    (function(){
-        var url = "https://d2hqlhbe1d8j2s.cloudfront.net/testlas/segment/dd998ff2620b4ab4a22a240a90ea4da2/dash/1778243906754/dd998ff2620b4ab4a22a240a90ea4da2.mpd";
-        var player = dashjs.MediaPlayer().create();
-        player.initialize(document.querySelector("#videoPlayer"), url, true);
-    })();
-</script>
