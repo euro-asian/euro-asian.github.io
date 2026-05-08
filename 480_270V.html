@@ -1,0 +1,66 @@
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<video
+    id="video"
+    controls
+    autoplay
+    muted
+    playsinline
+    preload="auto"
+    width="100%"
+    height="100%"
+></video>
+
+<script>
+    const video = document.getElementById("video");
+
+    const videoSrc =
+"https://d105emv5h26k8d.cloudfront.net/testlas/segment/24f74026da444e64b2f766b1437108a8/hls/1778247629983/24f74026da444e64b2f766b1437108a8.m3u8";
+
+    // Prefer Hls.js for Chrome/Edge/Firefox and other MSE-capable browsers
+    if (Hls.isSupported()) {
+
+        const hls = new Hls({
+            enableWorker: true,
+            lowLatencyMode: true,
+        });
+
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+
+            const playPromise = video.play();
+
+            if (playPromise !== undefined) {
+                playPromise.catch(function (error) {
+                    console.warn("Autoplay prevented:", error);
+                });
+            }
+        });
+
+        hls.on(Hls.Events.ERROR, function (event, data) {
+            console.error("HLS.js error:", data);
+        });
+
+    }
+    // Safari / iOS native HLS fallback
+    else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+
+        video.src = videoSrc;
+
+        video.addEventListener("loadedmetadata", function () {
+
+            const playPromise = video.play();
+
+            if (playPromise !== undefined) {
+                playPromise.catch(function (error) {
+                    console.warn("Autoplay prevented:", error);
+                });
+            }
+        });
+    }
+    else {
+        console.error("HLS is not supported in this browser.");
+    }
+</script>
