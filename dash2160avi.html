@@ -1,0 +1,95 @@
+```html id="0rqojj"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DASH Video Player</title>
+
+  <!-- DASH.js -->
+  <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    .video-container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="video-container">
+    <video
+      id="videoPlayer"
+      controls
+      autoplay
+      muted
+      playsinline
+      preload="auto"
+    ></video>
+  </div>
+
+  <script>
+    (function () {
+      const url =
+        "https://d2hqlhbe1d8j2s.cloudfront.net/testlas/segment/4a4e5910621c44b4b6134a0e169a06c5/dash/1778248631310/4a4e5910621c44b4b6134a0e169a06c5.mpd";
+
+      const video = document.querySelector("#videoPlayer");
+
+      const player = dashjs.MediaPlayer().create();
+
+      player.updateSettings({
+        streaming: {
+          lowLatencyEnabled: true,
+          abr: {
+            autoSwitchBitrate: {
+              video: true
+            }
+          }
+        }
+      });
+
+      player.initialize(video, url, true);
+
+      // Error handling
+      player.on(dashjs.MediaPlayer.events.ERROR, function (e) {
+        console.error("DASH.js error:", e);
+      });
+
+      // Auto play handling
+      video.addEventListener("canplay", () => {
+        video.play().catch((err) => {
+          console.log("Autoplay prevented:", err);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
+```
